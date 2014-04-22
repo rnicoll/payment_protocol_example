@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -14,9 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
-import freemarker.template.SimpleScalar;
 import freemarker.template.Template;
-import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
@@ -26,6 +25,7 @@ import freemarker.template.TemplateExceptionHandler;
  */
 public abstract class AbstractServlet extends HttpServlet {
     public static final Charset CHARSET_UTF_8 = Charset.forName("UTF-8");
+    public static final String CONTENT_TYPE_APPLICATION_XML_HTML = "application/xhtml+xml";
     public static final String CONTEXT_PARAMETER_FREEMARKER_TEMPLATE_DIR = "org.lostics.payment_protocol.servlet.freemarkerTemplateDir";
     
     public static final String DEFAULT_FREEMARKER_TEMPLATE_DIR = "/WEB-INF/freemarker";
@@ -102,6 +102,13 @@ public abstract class AbstractServlet extends HttpServlet {
         {
             throw new ServletException(e);
         }
+        
+        if (null == template)
+        {
+            return;
+        }
+        
+        response.setContentType(CONTENT_TYPE_APPLICATION_XML_HTML);
         
         try {
             template.process(root, response.getWriter());

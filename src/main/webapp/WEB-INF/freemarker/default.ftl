@@ -1,8 +1,6 @@
-<html>
-<head>
-<title>Hello</title>
-</head>
-<body>
+<#assign title = "Test"/>
+<#escape x as x?xml>
+<#include "head.ftl" />
 <p>Test</p>
-</body>
-</html>
+<#include "foot.ftl" />
+</#escape>
