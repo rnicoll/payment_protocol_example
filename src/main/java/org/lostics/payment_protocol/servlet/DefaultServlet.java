@@ -79,7 +79,7 @@ public class DefaultServlet extends AbstractServlet {
         
         out.write(paymentRequest.toByteArray());
         
-        return this.getConfiguration().getTemplate("default.ftl");
+        return null;
     }
 
     private Network getNetwork(final HttpServletRequest request) {

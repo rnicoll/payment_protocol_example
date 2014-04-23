@@ -140,6 +140,11 @@ public abstract class AbstractServlet extends HttpServlet {
             throw new ServletException(e);
         }
         
+        if (null == template)
+        {
+            return;
+        }
+        
         try {
             template.process(root, response.getWriter());
         } catch(TemplateException e) {
