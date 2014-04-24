@@ -17,30 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.bitcoin.protocols.payments.Protos.Output;
 import org.bitcoin.protocols.payments.Protos.PaymentDetails;
 import org.bitcoin.protocols.payments.Protos.PaymentRequest;
+import org.lostics.payment_protocol.model.Network;
 
 /**
  *
  * @author jrn
  */
 public class PaymentRequestServlet extends AbstractServlet {
-    public enum Network {
-        BitcoinMain("main"),
-        BitcoinTest("test"),
-        DogecoinMain("doge-main"),
-        DogecoinTest("doge-test");
-        
-        private final String code;
-        
-                Network(final String setCode) {
-            this.code = setCode;
-        }
-        
-        public String getCode() {
-            return this.code;
-        }
-    }
-    
-    
     public static final BigDecimal AMOUNT_PIP = new BigDecimal("0.00000001");
     
     public static final long EXPIRE_INTERVAL = 60 * 60 * 1000; // One hour
