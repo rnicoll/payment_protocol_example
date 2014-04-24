@@ -22,7 +22,7 @@ import org.bitcoin.protocols.payments.Protos.PaymentRequest;
  *
  * @author jrn
  */
-public class DefaultServlet extends AbstractServlet {
+public class PaymentRequestServlet extends AbstractServlet {
     public enum Network {
         BitcoinMain("main"),
         BitcoinTest("test"),
