@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.bitcoin.protocols.payments.Protos.Output;
 import org.bitcoin.protocols.payments.Protos.PaymentDetails;
 import org.bitcoin.protocols.payments.Protos.PaymentRequest;
+import org.hibernate.Session;
 import org.lostics.payment_protocol.model.Network;
 
 /**
@@ -34,12 +35,15 @@ public class PaymentRequestServlet extends AbstractServlet {
     public static final int PAYMENT_DETAILS_VERSION = 1;
 
     @Override
-    public Template doGet(HttpServletRequest request, HttpServletResponse response, Map<String, Object> root) throws Exception {
+    public Template doGet(final HttpServletRequest request, final HttpServletResponse response,
+            final Map<String, Object> root, final Session session)
+            throws Exception {
         return this.getConfiguration().getTemplate("default.ftl");
     }
 
     @Override
-    public Template doPost(HttpServletRequest request, HttpServletResponse response, Map<String, Object> root)
+    public Template doPost(final HttpServletRequest request, final HttpServletResponse response,
+            final Map<String, Object> root, final Session session)
             throws Exception {
         final Network network = getNetwork(request);
         final NetworkParameters networkParameters = getNetworkParameters(network);

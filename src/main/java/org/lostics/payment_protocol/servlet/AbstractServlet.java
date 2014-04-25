@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -19,6 +18,9 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
 /**
  *
  * @author jrn
@@ -31,6 +33,14 @@ public abstract class AbstractServlet extends HttpServlet {
     public static final String DEFAULT_FREEMARKER_TEMPLATE_DIR = "/WEB-INF/freemarker";
     
     private Configuration freemarkerCfg;
+
+    private Session buildHibernateSession() {
+        final SessionFactory sessionFactory = ContextListener.getSessionFactory(this.getServletContext());
+        
+        // TODO: Handle lack of a session factory
+        
+        return sessionFactory.openSession();
+    }
     
     public final Map<String, Object> buildRoot(final HttpServletRequest request,
         final HttpServletResponse response)
@@ -43,6 +53,16 @@ public abstract class AbstractServlet extends HttpServlet {
         return root;
     }
 
+    /**
+     * Build a Freemarker configuration based on details loaded from servlet
+     * context.
+     * 
+     * @param context servlet context to use for resolving file location on
+     * disk.
+     * @param templateDirectory name of the template directory, relative to the
+     * web application context.
+     * @return a Freemarker configuration.
+     */
     private freemarker.template.Configuration configureFreemarker(final ServletContext context, final String templateDirectory)
         throws ServletException {
         final freemarker.template.Configuration freemarkerConfiguration = new freemarker.template.Configuration();
@@ -92,7 +112,12 @@ public abstract class AbstractServlet extends HttpServlet {
         final Template template;
         
         try {
-            template = doGet(request, response, root);
+            final Session session = buildHibernateSession();
+            try {
+                template = doGet(request, response, root, session);
+            } finally {
+                session.close();
+            }
         }
         catch(HttpThrowable t)
         {
@@ -123,7 +148,7 @@ public abstract class AbstractServlet extends HttpServlet {
     }
     
     public abstract Template doGet(final HttpServletRequest request, final HttpServletResponse response,
-            final Map<String, Object> root)
+            final Map<String, Object> root, Session session)
             throws HttpThrowable, Exception;
     
     @Override
@@ -134,7 +159,12 @@ public abstract class AbstractServlet extends HttpServlet {
         final Template template;
         
         try {
-            template = doPost(request, response, root);
+            final Session session = buildHibernateSession();
+            try {
+                template = doPost(request, response, root, session);
+            } finally {
+                session.close();
+            }
         }
         catch(HttpThrowable t)
         {
@@ -163,7 +193,7 @@ public abstract class AbstractServlet extends HttpServlet {
     }
     
     public abstract Template doPost(final HttpServletRequest request, final HttpServletResponse response,
-            final Map<String, Object> root)
+            final Map<String, Object> root, Session session)
             throws HttpThrowable, Exception;
 
     public Configuration getConfiguration() {

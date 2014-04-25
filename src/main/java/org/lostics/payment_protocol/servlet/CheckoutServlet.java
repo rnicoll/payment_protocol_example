@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import freemarker.template.Template;
+import org.hibernate.Session;
 
 /**
  *
@@ -12,12 +13,15 @@ import freemarker.template.Template;
  */
 public class CheckoutServlet extends AbstractServlet {
     @Override
-    public Template doGet(HttpServletRequest request, HttpServletResponse response, Map<String, Object> root) throws Exception {
+    public Template doGet(final HttpServletRequest request, final HttpServletResponse response,
+            final Map<String, Object> root, final Session session)
+            throws Exception {
         return this.getConfiguration().getTemplate("default.ftl");
     }
 
     @Override
-    public Template doPost(HttpServletRequest request, HttpServletResponse response, Map<String, Object> root)
+    public Template doPost(final HttpServletRequest request, final HttpServletResponse response,
+            final Map<String, Object> root, final Session session)
             throws Exception {
         // FIXME: Create an order to be paid for
         
