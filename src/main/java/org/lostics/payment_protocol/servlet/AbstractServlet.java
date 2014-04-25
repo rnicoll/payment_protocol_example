@@ -94,6 +94,11 @@ public abstract class AbstractServlet extends HttpServlet {
         try {
             template = doGet(request, response, root);
         }
+        catch(HttpThrowable t)
+        {
+            t.send(response);
+            return;
+        }
         catch(ServletException e)
         {
             throw e;
@@ -119,7 +124,7 @@ public abstract class AbstractServlet extends HttpServlet {
     
     public abstract Template doGet(final HttpServletRequest request, final HttpServletResponse response,
             final Map<String, Object> root)
-            throws Exception;
+            throws HttpThrowable, Exception;
     
     @Override
     public void doPost(final HttpServletRequest request, final HttpServletResponse response)
@@ -130,6 +135,11 @@ public abstract class AbstractServlet extends HttpServlet {
         
         try {
             template = doPost(request, response, root);
+        }
+        catch(HttpThrowable t)
+        {
+            t.send(response);
+            return;
         }
         catch(ServletException e)
         {
@@ -154,7 +164,7 @@ public abstract class AbstractServlet extends HttpServlet {
     
     public abstract Template doPost(final HttpServletRequest request, final HttpServletResponse response,
             final Map<String, Object> root)
-            throws Exception;
+            throws HttpThrowable, Exception;
 
     public Configuration getConfiguration() {
         return this.freemarkerCfg;
