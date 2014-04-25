@@ -1,4 +1,4 @@
-package org.lostics.payment_protocol.servlet;
+package uk.me.jrn.payment_protocol.servlet;
 
 import com.google.bitcoin.core.Address;
 import com.google.bitcoin.core.AddressFormatException;
@@ -18,7 +18,7 @@ import org.bitcoin.protocols.payments.Protos.Output;
 import org.bitcoin.protocols.payments.Protos.PaymentDetails;
 import org.bitcoin.protocols.payments.Protos.PaymentRequest;
 import org.hibernate.Session;
-import org.lostics.payment_protocol.model.Network;
+import uk.me.jrn.payment_protocol.model.Network;
 
 /**
  *

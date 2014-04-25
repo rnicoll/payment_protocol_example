@@ -2,7 +2,7 @@
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
     <servlet>
         <servlet-name>checkout</servlet-name>
-        <servlet-class>org.lostics.payment_protocol.servlet.CheckoutServlet</servlet-class>
+        <servlet-class>uk.me.jrn.payment_protocol.servlet.CheckoutServlet</servlet-class>
         <init-param>
             <param-name>org.lostics.payment_protocol.servlet.freemarkerTemplateDir</param-name>
             <param-value>/WEB-INF/freemarker</param-value>
@@ -11,7 +11,7 @@
     </servlet>
     <servlet>
         <servlet-name>paymentRequest</servlet-name>
-        <servlet-class>org.lostics.payment_protocol.servlet.PaymentRequestServlet</servlet-class>
+        <servlet-class>uk.me.jrn.payment_protocol.servlet.PaymentRequestServlet</servlet-class>
         <init-param>
             <param-name>org.lostics.payment_protocol.servlet.freemarkerTemplateDir</param-name>
             <param-value>/WEB-INF/freemarker</param-value>
@@ -20,7 +20,7 @@
     </servlet>
     <servlet>
         <servlet-name>payment</servlet-name>
-        <servlet-class>org.lostics.payment_protocol.servlet.PaymentServlet</servlet-class>
+        <servlet-class>uk.me.jrn.payment_protocol.servlet.PaymentServlet</servlet-class>
         <init-param>
             <param-name>org.lostics.payment_protocol.servlet.freemarkerTemplateDir</param-name>
             <param-value>/WEB-INF/freemarker</param-value>
@@ -43,6 +43,6 @@
         <welcome-file>checkout</welcome-file>
     </welcome-file-list>
     <listener>
-  	<listener-class>org.lostics.payment_protocol.servlet.ContextListener</listener-class>
-  </listener>
+        <listener-class>uk.me.jrn.payment_protocol.servlet.ContextListener</listener-class>
+    </listener>
 </web-app>

@@ -1,4 +1,4 @@
-package org.lostics.payment_protocol.servlet;
+package uk.me.jrn.payment_protocol.servlet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;

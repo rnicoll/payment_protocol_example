@@ -1,4 +1,4 @@
-package org.lostics.payment_protocol.servlet;
+package uk.me.jrn.payment_protocol.servlet;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;

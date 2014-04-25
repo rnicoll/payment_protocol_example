@@ -1,4 +1,4 @@
-package org.lostics.payment_protocol.model;
+package uk.me.jrn.payment_protocol.model;
 
 public enum Network {
 

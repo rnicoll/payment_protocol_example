@@ -1,4 +1,4 @@
-package org.lostics.payment_protocol.model;
+package uk.me.jrn.payment_protocol.model;
 
 import java.io.Serializable;
 import java.util.List;

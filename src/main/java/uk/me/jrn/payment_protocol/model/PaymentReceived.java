@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.lostics.payment_protocol.model;
+package uk.me.jrn.payment_protocol.model;
 
 import java.util.List;
 import javax.persistence.Column;
