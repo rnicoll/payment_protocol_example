@@ -3,7 +3,6 @@ package uk.me.jrn.payment_protocol.servlet;
 import com.google.bitcoin.core.Address;
 import com.google.bitcoin.core.AddressFormatException;
 import com.google.bitcoin.core.NetworkParameters;
-import com.google.bitcoin.params.MainNetParams;
 import com.google.bitcoin.script.Script;
 import com.google.bitcoin.script.ScriptBuilder;
 import com.google.protobuf.ByteString;
@@ -11,6 +10,7 @@ import freemarker.template.Template;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,15 +19,14 @@ import org.bitcoin.protocols.payments.Protos.PaymentDetails;
 import org.bitcoin.protocols.payments.Protos.PaymentRequest;
 import org.hibernate.Session;
 import uk.me.jrn.payment_protocol.model.Network;
+import uk.me.jrn.payment_protocol.model.PurchaseOrder;
 import uk.me.jrn.payment_protocol.servlet.throwable.InputValidationThrowable;
 
 /**
  *
  * @author jrn
  */
-public class PaymentRequestServlet extends AbstractServlet {
-    public static final BigDecimal AMOUNT_PIP = new BigDecimal("0.00000001");
-    
+public class PaymentRequestServlet extends AbstractServlet {    
     public static final long EXPIRE_INTERVAL = 60 * 60 * 1000; // One hour
     
     public static final String MIME_TYPE_BITCOIN_PAYMENT_REQUEST = "application/bitcoin-paymentrequest";
@@ -45,21 +44,30 @@ public class PaymentRequestServlet extends AbstractServlet {
     @Override
     public Template doPost(final HttpServletRequest request, final HttpServletResponse response,
             final Map<String, Object> root, final Session session)
-            throws Exception {
-        final Network network;
+            throws Exception, HttpThrowable {
+        final String path = request.getPathInfo();
+        final UUID orderId;
         
         try {
-            network = this.getEnumParameter(request, "network", Network.class);
-        } catch(InputValidationThrowable e) {
-            throw new ServletException(e.getMessage(), e);
+            orderId = UUID.fromString(path);
+        } catch(IllegalArgumentException e) {
+            throw new HttpThrowable(HttpServletResponse.SC_NOT_FOUND);
         }
+        
+        final PurchaseOrder order = (PurchaseOrder)session.get(PurchaseOrder.class, orderId);
+        
+        if (null == order) {
+            throw new HttpThrowable(HttpServletResponse.SC_NOT_FOUND);
+        }
+        
+        final Network network = order.getNetwork();
         final NetworkParameters networkParameters = getNetworkParameters(network);
         final Output output;
         final PaymentDetails paymentDetails;
         final PaymentRequest paymentRequest;
         
         try {
-            output = getRequestOutput(request, networkParameters);
+            output = getRequestOutput(order, networkParameters);
         } catch(AddressFormatException ex) {
             throw new ServletException(ex);
         }
@@ -74,11 +82,6 @@ public class PaymentRequestServlet extends AbstractServlet {
         out.write(paymentRequest.toByteArray());
         
         return null;
-    }
-
-    private NetworkParameters getNetworkParameters(final Network network) {
-        // FIXME: Resolve the actual selected network
-        return new MainNetParams();
     }
     
     private PaymentDetails getPaymentDetails(final HttpServletRequest request,
@@ -105,14 +108,13 @@ public class PaymentRequestServlet extends AbstractServlet {
         return paymentRequestBuilder.build();
     }
 
-    private Output getRequestOutput(final HttpServletRequest request, final NetworkParameters network)
+    private Output getRequestOutput(final PurchaseOrder purchaseOrder, final NetworkParameters network)
             throws AddressFormatException {
-        final Address address = new Address(network, request.getParameter("address"));
-        final BigDecimal amount = new BigDecimal(request.getParameter("amount"));
+        final Address address = new Address(network, purchaseOrder.getAddress());
         final Script script = ScriptBuilder.createOutputScript(address);
         final Output.Builder outputBuilder = Output.newBuilder();
         
-        outputBuilder.setAmount(amount.divide(AMOUNT_PIP).longValue());
+        outputBuilder.setAmount(purchaseOrder.getAmount());
         outputBuilder.setScript(ByteString.copyFrom(script.getProgram()));
         
         return outputBuilder.build();

@@ -1,12 +1,12 @@
 package uk.me.jrn.payment_protocol.servlet;
 
-import uk.me.jrn.payment_protocol.servlet.throwable.MissingParameterThrowable;
-import uk.me.jrn.payment_protocol.servlet.throwable.InvalidParameterThrowable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -19,17 +19,29 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-import java.util.EnumSet;
+
+import com.google.bitcoin.core.Address;
+import com.google.bitcoin.core.AddressFormatException;
+import com.google.bitcoin.core.NetworkParameters;
+import com.google.bitcoin.params.MainNetParams;
+import com.google.bitcoin.params.TestNet2Params;
+import java.math.BigDecimal;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+
+import uk.me.jrn.payment_protocol.model.Network;
 import uk.me.jrn.payment_protocol.servlet.throwable.InputValidationThrowable;
+import uk.me.jrn.payment_protocol.servlet.throwable.MissingParameterThrowable;
+import uk.me.jrn.payment_protocol.servlet.throwable.InvalidParameterThrowable;
 
 /**
  *
  * @author jrn
  */
 public abstract class AbstractServlet extends HttpServlet {
+    public static final BigDecimal AMOUNT_PIP = new BigDecimal("0.00000001");
+    
     public static final Charset CHARSET_UTF_8 = Charset.forName("UTF-8");
     public static final String CONTENT_TYPE_APPLICATION_XML_HTML = "application/xhtml+xml";
     public static final String CONTEXT_PARAMETER_FREEMARKER_TEMPLATE_DIR = "org.lostics.payment_protocol.servlet.freemarkerTemplateDir";
@@ -204,8 +216,75 @@ public abstract class AbstractServlet extends HttpServlet {
         return this.freemarkerCfg;
     }
 
+    public Address getAddressParameter(final HttpServletRequest request, final String parameterName,
+            final NetworkParameters networkParams)
+            throws InputValidationThrowable {
+        final String value = getStringParameter(request, parameterName);
+        
+        try {
+            return new Address(networkParams, value);
+        } catch(AddressFormatException e) {
+            throw new InvalidParameterThrowable(parameterName);
+        }
+    }
+
+    /**
+     * Get a currency quantity from a parameter sent by the client.
+     * 
+     * @param request
+     * @param parameterName
+     * @return
+     * @throws InputValidationThrowable 
+     */
+    public BigDecimal getAmountParameter(final HttpServletRequest request, final String parameterName)
+            throws InputValidationThrowable {
+        final BigDecimal amountDecimal = getBigDecimalParameter(request, parameterName);
+        
+        if (amountDecimal.compareTo(BigDecimal.ZERO) < 0) {
+            throw new InvalidParameterThrowable(parameterName);
+        }
+        
+        return amountDecimal;
+    }
+
+    public BigDecimal getBigDecimalParameter(final HttpServletRequest request, final String parameterName)
+            throws InputValidationThrowable {
+        final String value = getStringParameter(request, parameterName);
+        
+        try {
+            return new BigDecimal(value);
+        } catch(IllegalArgumentException e) {
+            throw new InvalidParameterThrowable(parameterName);
+        }
+    }
+
     public <T extends Enum> T getEnumParameter(final HttpServletRequest request, final String parameterName,
             final Class<T> aClass)
+            throws InputValidationThrowable {
+        final String value = getStringParameter(request, parameterName);
+        
+        try {
+            return (T)Enum.valueOf(aClass, value);
+        } catch(IllegalArgumentException e) {
+            throw new InvalidParameterThrowable(parameterName, EnumSet.allOf(aClass));
+        }
+    }
+    
+    public NetworkParameters getNetworkParameters(final Network network) {
+        switch (network) {
+            case BITCOIN_MAIN:
+                return new MainNetParams();
+            case BITCOIN_TEST:
+                return new TestNet2Params();
+            default:
+                break;
+        }
+        
+        throw new IllegalArgumentException("Unsupported network \""
+            + network.name() + "\".");
+    }
+
+    public String getStringParameter(final HttpServletRequest request, final String parameterName)
             throws InputValidationThrowable {
         final String value = request.getParameter(parameterName);
         
@@ -213,10 +292,6 @@ public abstract class AbstractServlet extends HttpServlet {
             throw new MissingParameterThrowable(parameterName);
         }
         
-        try {
-            return (T)Enum.valueOf(aClass, value);
-        } catch(IllegalArgumentException e) {
-            throw new InvalidParameterThrowable(parameterName, EnumSet.allOf(aClass));
-        }
+        return value;
     }
 }

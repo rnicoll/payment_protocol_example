@@ -13,5 +13,10 @@ public class InvalidParameterThrowable extends InputValidationThrowable {
             + parameterName + "\" was invalid; expected one of: "
             + possibleValues);
     }
+
+    public InvalidParameterThrowable(String parameterName) {
+        super("There provided value for the parameter \""
+            + parameterName + "\" was invalid.");
+    }
     
 }

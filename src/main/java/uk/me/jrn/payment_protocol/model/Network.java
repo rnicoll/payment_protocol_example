@@ -2,10 +2,10 @@ package uk.me.jrn.payment_protocol.model;
 
 public enum Network {
 
-    BitcoinMain("main"),
-    BitcoinTest("test"),
-    DogecoinMain("doge-main"),
-    DogecoinTest("doge-test");
+    BITCOIN_MAIN("main"),
+    BITCOIN_TEST("test"),
+    DOGECOIN_MAIN("doge-main"),
+    DOGECOIN_TEST("doge-test");
 
     private final String code;
 
