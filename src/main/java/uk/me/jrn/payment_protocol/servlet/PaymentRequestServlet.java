@@ -19,6 +19,7 @@ import org.bitcoin.protocols.payments.Protos.PaymentDetails;
 import org.bitcoin.protocols.payments.Protos.PaymentRequest;
 import org.hibernate.Session;
 import uk.me.jrn.payment_protocol.model.Network;
+import uk.me.jrn.payment_protocol.servlet.throwable.InputValidationThrowable;
 
 /**
  *
@@ -45,7 +46,13 @@ public class PaymentRequestServlet extends AbstractServlet {
     public Template doPost(final HttpServletRequest request, final HttpServletResponse response,
             final Map<String, Object> root, final Session session)
             throws Exception {
-        final Network network = getNetwork(request);
+        final Network network;
+        
+        try {
+            network = this.getEnumParameter(request, "network", Network.class);
+        } catch(InputValidationThrowable e) {
+            throw new ServletException(e.getMessage(), e);
+        }
         final NetworkParameters networkParameters = getNetworkParameters(network);
         final Output output;
         final PaymentDetails paymentDetails;
@@ -67,11 +74,6 @@ public class PaymentRequestServlet extends AbstractServlet {
         out.write(paymentRequest.toByteArray());
         
         return null;
-    }
-
-    private Network getNetwork(final HttpServletRequest request) {
-        // FIXME: Resolve the actual selected network
-        return Network.BitcoinMain;
     }
 
     private NetworkParameters getNetworkParameters(final Network network) {

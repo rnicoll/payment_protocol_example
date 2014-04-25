@@ -1,5 +1,7 @@
 package uk.me.jrn.payment_protocol.servlet;
 
+import uk.me.jrn.payment_protocol.servlet.throwable.MissingParameterThrowable;
+import uk.me.jrn.payment_protocol.servlet.throwable.InvalidParameterThrowable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -17,9 +19,11 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import java.util.EnumSet;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import uk.me.jrn.payment_protocol.servlet.throwable.InputValidationThrowable;
 
 /**
  *
@@ -198,5 +202,21 @@ public abstract class AbstractServlet extends HttpServlet {
 
     public Configuration getConfiguration() {
         return this.freemarkerCfg;
+    }
+
+    public <T extends Enum> T getEnumParameter(final HttpServletRequest request, final String parameterName,
+            final Class<T> aClass)
+            throws InputValidationThrowable {
+        final String value = request.getParameter(parameterName);
+        
+        if (null == value) {
+            throw new MissingParameterThrowable(parameterName);
+        }
+        
+        try {
+            return (T)Enum.valueOf(aClass, value);
+        } catch(IllegalArgumentException e) {
+            throw new InvalidParameterThrowable(parameterName, EnumSet.allOf(aClass));
+        }
     }
 }
