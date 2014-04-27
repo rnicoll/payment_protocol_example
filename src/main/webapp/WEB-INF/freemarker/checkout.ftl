@@ -2,21 +2,28 @@
 <#escape x as x?xml>
 <#include "head.ftl" />
 
-<form action="" method="post">
+<form action="" method="post" role="form">
 
-<p>Network:
-<select name="network">
-<option value="BITCOIN_MAIN">Main</option>
-<option value="BITCOIN_TEST">Test</option>
-</select></p>
-
-<p>Amount: <input type="number" name="amount" min="0" max="1000000" step="0.00000001" value="100" /></p>
-
-<p>Address: <input type="text" name="address" /></p>
-
-<p>Memo: <input type="text" name="memo" /></p>
-
-<p><input type="submit" /></p>
+  <div class="form-group">
+    <label for="network">Network:</label>
+    <select class="form-control" id="network" name="network" required="required">
+      <option value="BITCOIN_MAIN" selected="selected">Main</option>
+      <option value="BITCOIN_TEST">Test</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="amount">Amount (BTC):</label>
+    <input type="number" class="form-control" id="amount" name="amount" min="0" max="1000000" step="0.00000001" value="100" required="required" />
+  </div>
+  <div class="form-group">
+    <label for="address">Address:</label>
+    <input type="text" class="form-control" id="address" name="address" required="required" />
+  </div>
+  <div class="form-group">
+    <label for="memo">Memo:</label>
+    <input type="text" class="form-control" id="memo" name="memo" />
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
 
 </form>
 

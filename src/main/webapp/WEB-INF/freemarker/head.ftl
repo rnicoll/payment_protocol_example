@@ -46,3 +46,6 @@
     <div class="container">
 
       <div class="starter-template">
+          
+      <!-- Inject enough vertical space to push content below the navigation -->
+      <div style="height: 5em;">&#160;</div>
