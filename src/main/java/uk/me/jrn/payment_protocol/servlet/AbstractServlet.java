@@ -26,6 +26,7 @@ import com.google.bitcoin.core.NetworkParameters;
 import com.google.bitcoin.params.MainNetParams;
 import com.google.bitcoin.params.TestNet2Params;
 import java.math.BigDecimal;
+import org.hibernate.HibernateException;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -50,12 +51,25 @@ public abstract class AbstractServlet extends HttpServlet {
     
     private Configuration freemarkerCfg;
 
-    private Session buildHibernateSession() {
+    /**
+     * Builds a Hibernate session from the session factory in the servlet context.
+     * 
+     * @return a Hibernate session.
+     * @throws ServletException if there was a problem constructing the session.
+     */
+    private Session buildHibernateSession()
+        throws ServletException {
         final SessionFactory sessionFactory = ContextListener.getSessionFactory(this.getServletContext());
         
-        // TODO: Handle lack of a session factory
+        if (null == sessionFactory) {
+            throw new ServletException("No Hibernate session factory is available.");
+        }
         
-        return sessionFactory.openSession();
+        try {
+            return sessionFactory.openSession();
+        } catch(HibernateException e) {
+            throw new ServletException("Could not open Hibernate session.", e);
+        }
     }
     
     public final Map<String, Object> buildRoot(final HttpServletRequest request,
