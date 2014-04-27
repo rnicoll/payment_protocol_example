@@ -20,7 +20,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name="purchase_order")
 public class PurchaseOrder implements Serializable {
-    private UUID id;
+    private String id;
     private long amount;
     private Network network;
     private String address;
@@ -36,7 +36,7 @@ public class PurchaseOrder implements Serializable {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name="order_id")
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
@@ -89,7 +89,7 @@ public class PurchaseOrder implements Serializable {
         this.amount = amount;
     }
 
-    public void setId(UUID id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
