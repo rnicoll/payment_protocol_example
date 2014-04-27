@@ -11,6 +11,7 @@ import com.google.bitcoin.core.NetworkParameters;
 
 import freemarker.template.Template;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import uk.me.jrn.payment_protocol.model.Network;
 import uk.me.jrn.payment_protocol.model.PurchaseOrder;
@@ -61,9 +62,12 @@ public class CheckoutServlet extends AbstractServlet {
         order.setAddress(address.toString());
         order.setAmount(amount);
         
-        session.persist(order);
+        final Transaction tx = session.beginTransaction();
+        
         session.save(order);
-        session.update(order);
+        
+        tx.commit();
+        
         
         root.put("order_id", order.getId());
         
