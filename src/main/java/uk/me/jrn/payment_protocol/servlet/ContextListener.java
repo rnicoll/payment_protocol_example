@@ -25,7 +25,9 @@ public class ContextListener implements ServletContextListener {
         serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
             configuration.getProperties()).build();
         
-        servletContext.setAttribute(CONTEXT_ATTR_SESSION_BUILDER, configuration.buildSessionFactory(serviceRegistry));
+        final SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+        
+        servletContext.setAttribute(CONTEXT_ATTR_SESSION_BUILDER, sessionFactory);
     }
 
     @Override
