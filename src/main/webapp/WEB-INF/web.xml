@@ -10,17 +10,8 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
-        <servlet-name>paymentRequest</servlet-name>
-        <servlet-class>uk.me.jrn.payment_protocol.servlet.PaymentRequestServlet</servlet-class>
-        <init-param>
-            <param-name>org.lostics.payment_protocol.servlet.freemarkerTemplateDir</param-name>
-            <param-value>/WEB-INF/freemarker</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet>
-        <servlet-name>payment</servlet-name>
-        <servlet-class>uk.me.jrn.payment_protocol.servlet.PaymentServlet</servlet-class>
+        <servlet-name>order</servlet-name>
+        <servlet-class>uk.me.jrn.payment_protocol.servlet.OrderServlet</servlet-class>
         <init-param>
             <param-name>org.lostics.payment_protocol.servlet.freemarkerTemplateDir</param-name>
             <param-value>/WEB-INF/freemarker</param-value>
@@ -32,12 +23,8 @@
         <url-pattern>/checkout</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>paymentRequest</servlet-name>
-        <url-pattern>/paymentRequest/</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>payment</servlet-name>
-        <url-pattern>/payment/</url-pattern>
+        <servlet-name>order</servlet-name>
+        <url-pattern>/order/*</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>checkout</welcome-file>

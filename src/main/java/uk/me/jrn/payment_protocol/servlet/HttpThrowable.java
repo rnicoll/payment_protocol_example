@@ -39,7 +39,7 @@ public class HttpThrowable extends Throwable {
         response.reset();
     
         if (null != this.getMessage()) {
-            response.sendError(getStatusCode(), this.getMessage());
+            response.sendError(this.getStatusCode(), this.getMessage());
         } else {
             response.setStatus(this.getStatusCode());
         }

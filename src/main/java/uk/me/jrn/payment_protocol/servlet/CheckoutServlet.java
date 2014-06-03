@@ -68,9 +68,10 @@ public class CheckoutServlet extends AbstractServlet {
         
         tx.commit();
         
+        // Redirect the user to the generated order
+        response.sendRedirect(request.getContextPath() + "/order/"
+            + order.getId() + "/");
         
-        root.put("order_id", order.getId());
-        
-        return this.getConfiguration().getTemplate("pay_now.ftl");
+        return null;
     }
 }
