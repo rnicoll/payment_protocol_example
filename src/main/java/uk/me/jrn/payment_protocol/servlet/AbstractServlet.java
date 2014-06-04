@@ -2,6 +2,7 @@ package uk.me.jrn.payment_protocol.servlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -20,14 +21,13 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
-import com.google.bitcoin.core.Address;
-import com.google.bitcoin.core.AddressFormatException;
-import com.google.bitcoin.core.NetworkParameters;
-import com.google.bitcoin.params.MainNetParams;
-import com.google.bitcoin.params.TestNet2Params;
-import java.math.BigDecimal;
-import org.hibernate.HibernateException;
+import com.google.dogecoin.core.Address;
+import com.google.dogecoin.core.AddressFormatException;
+import com.google.dogecoin.core.NetworkParameters;
+import com.google.dogecoin.params.MainNetParams;
+import com.google.dogecoin.params.TestNet2Params;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
