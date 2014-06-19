@@ -8,4 +8,8 @@ public abstract class InputValidationThrowable extends Throwable {
     public  InputValidationThrowable(final String message) {
         super(message);
     }
+    
+    public  InputValidationThrowable(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 }

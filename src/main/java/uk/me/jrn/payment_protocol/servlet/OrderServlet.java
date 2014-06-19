@@ -37,7 +37,7 @@ public class OrderServlet extends AbstractServlet {
     public static final long EXPIRE_INTERVAL = 60 * 60 * 1000; // One hour
     
     public static final String MIME_TYPE_BITCOIN_PAYMENT_REQUEST = "application/bitcoin-paymentrequest";
-    public static final String MIME_TYPE_DOGECOIN_PAYMENT_REQUEST = "application/x-dogecoin-paymentrequest";
+    public static final String MIME_TYPE_DOGECOIN_PAYMENT_REQUEST = "application/vnd.doge.payment.request";
     
     public static final int PAYMENT_DETAILS_VERSION = 1;
     
@@ -177,7 +177,7 @@ public class OrderServlet extends AbstractServlet {
         paymentDetails = buildPaymentDetails(output, network);
         paymentRequest = getPaymentRequest(paymentDetails);
         
-        response.setContentType(MIME_TYPE_BITCOIN_PAYMENT_REQUEST);
+        response.setContentType(MIME_TYPE_DOGECOIN_PAYMENT_REQUEST);
         
         final OutputStream out = response.getOutputStream();
         

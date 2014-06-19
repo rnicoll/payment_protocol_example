@@ -25,7 +25,7 @@ import com.google.dogecoin.core.Address;
 import com.google.dogecoin.core.AddressFormatException;
 import com.google.dogecoin.core.NetworkParameters;
 import com.google.dogecoin.params.MainNetParams;
-import com.google.dogecoin.params.TestNet2Params;
+import com.google.dogecoin.params.TestNet3Params;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -238,7 +238,7 @@ public abstract class AbstractServlet extends HttpServlet {
         try {
             return new Address(networkParams, value);
         } catch(AddressFormatException e) {
-            throw new InvalidParameterThrowable(parameterName);
+            throw new InvalidParameterThrowable(parameterName, e);
         }
     }
 
@@ -286,10 +286,10 @@ public abstract class AbstractServlet extends HttpServlet {
     
     public NetworkParameters getNetworkParameters(final Network network) {
         switch (network) {
-            case BITCOIN_MAIN:
+            case DOGECOIN_MAIN:
                 return new MainNetParams();
-            case BITCOIN_TEST:
-                return new TestNet2Params();
+            case DOGECOIN_TEST:
+                return new TestNet3Params();
             default:
                 break;
         }

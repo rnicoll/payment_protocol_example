@@ -7,12 +7,12 @@
   <div class="form-group">
     <label for="network">Network:</label>
     <select class="form-control" id="network" name="network" required="required">
-      <option value="BITCOIN_MAIN" selected="selected">Main</option>
-      <option value="BITCOIN_TEST">Test</option>
+      <option value="DOGECOIN_MAIN" selected="selected">Main</option>
+      <option value="DOGECOIN_TEST">Test</option>
     </select>
   </div>
   <div class="form-group">
-    <label for="amount">Amount (BTC):</label>
+    <label for="amount">Amount (DOGE):</label>
     <input type="number" class="form-control" id="amount" name="amount" min="0" max="1000000" step="0.00000001" value="100" required="required" />
   </div>
   <div class="form-group">
