@@ -21,9 +21,9 @@ import com.google.protobuf.ByteString;
 
 import freemarker.template.Template;
 
-import org.bitcoin.protocols.payments.Protos.Output;
-import org.bitcoin.protocols.payments.Protos.PaymentDetails;
-import org.bitcoin.protocols.payments.Protos.PaymentRequest;
+import com.dogecoin.protocols.payments.Protos.Output;
+import com.dogecoin.protocols.payments.Protos.PaymentDetails;
+import com.dogecoin.protocols.payments.Protos.PaymentRequest;
 import org.hibernate.Session;
 
 import uk.me.jrn.payment_protocol.model.Network;
@@ -41,11 +41,11 @@ public class OrderServlet extends AbstractServlet {
     
     public static final int PAYMENT_DETAILS_VERSION = 1;
     
-    private PaymentDetails buildPaymentDetails(final Output output, final Network network) {
+    private PaymentDetails buildPaymentDetails(final Output output, final NetworkParameters network) {
         final long secondsSinceEpoch = System.currentTimeMillis() / 1000;
         final PaymentDetails.Builder paymentDetailsBuilder = PaymentDetails.newBuilder();
         
-        paymentDetailsBuilder.setNetwork(network.getCode());
+        paymentDetailsBuilder.setGenesis(network.getGenesisBlock().getHashAsString());
         paymentDetailsBuilder.addOutputs(output);
         paymentDetailsBuilder.setTime(secondsSinceEpoch);
         paymentDetailsBuilder.setExpires(secondsSinceEpoch + EXPIRE_INTERVAL);
@@ -174,7 +174,7 @@ public class OrderServlet extends AbstractServlet {
             throw new ServletException(ex);
         }
         
-        paymentDetails = buildPaymentDetails(output, network);
+        paymentDetails = buildPaymentDetails(output, networkParameters);
         paymentRequest = getPaymentRequest(paymentDetails);
         
         response.setContentType(MIME_TYPE_DOGECOIN_PAYMENT_REQUEST);
