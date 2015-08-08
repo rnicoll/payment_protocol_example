@@ -1,6 +1,5 @@
 package uk.me.jrn.payment_protocol.servlet.throwable;
 
-import com.google.dogecoin.core.AddressFormatException;
 import java.util.Collection;
 
 /**

@@ -6,8 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
-import com.google.dogecoin.core.Address;
-import com.google.dogecoin.core.NetworkParameters;
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.NetworkParameters;
 
 import freemarker.template.Template;
 import org.hibernate.Session;
